@@ -11,11 +11,16 @@ git:
   
 sudo: false
 
+before_install:
+  - gem update --system
+  - gem --version
+
 script:
   - ruby --verbose download-atlas-upload.rb
 
 after_script:
   - ls -al
+  - pwd
 
 env:
   - LANG="en_US.UTF-8"

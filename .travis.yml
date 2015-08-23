@@ -1,0 +1,18 @@
+language: ruby
+
+git:
+  submodules: false
+  
+sudo: false
+
+script:
+  - ruby download-atlas-upload.rb
+
+after_script:
+  - ls -al atlas-upload
+
+env:
+  - LANG="en_US.UTF-8"
+
+os:
+  - linux

@@ -1,5 +1,11 @@
 language: ruby
 
+RVM:
+  - 1.9
+  - 2.0
+  - 2.1
+  - 2.2
+
 git:
   submodules: false
   
@@ -9,7 +15,7 @@ script:
   - ruby download-atlas-upload.rb
 
 after_script:
-  - ls -al atlas-upload
+  - ls -al
 
 env:
   - LANG="en_US.UTF-8"

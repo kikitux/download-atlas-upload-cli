@@ -12,7 +12,7 @@ git:
 sudo: false
 
 script:
-  - ruby download-atlas-upload.rb
+  - ruby --verbose download-atlas-upload.rb
 
 after_script:
   - ls -al

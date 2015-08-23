@@ -1,17 +1,15 @@
 language: ruby
 
 RVM:
-  - 1.9
-  - 2.0
-  - 2.1
-  - 2.2
+  - 1.9.3
+  - 2.2.2
 
 git:
   submodules: false
   
 sudo: false
 
-before_install:
+install:
   - gem update --system
   - gem --version
 

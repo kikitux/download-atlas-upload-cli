@@ -2,7 +2,7 @@ language: ruby
 
 RVM:
   - 1.9.3
-  - 2.2.2
+  - 2.2.3
 
 git:
   submodules: false

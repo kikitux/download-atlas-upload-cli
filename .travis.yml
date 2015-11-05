@@ -15,11 +15,10 @@ install:
   - gem --version
 
 script:
-  - ruby --verbose download-atlas-upload.rb
+  - for file in *rb ; do ruby --verbose $file; done
 
 after_script:
   - ls -al
-  - pwd
 
 env:
   - LANG="en_US.UTF-8"

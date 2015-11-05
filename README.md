@@ -1,3 +1,7 @@
-# download-atlas-upload-cli
+# download-hashicorp-tools
 
-Ruby code to download the current atlas-upload binary for linux
+Simple scripts that download hashicorp applications
+
+###Note
+These scripts at the moment skip -rc version.
+The reason behind this, is if you are faster testing a rc version, or building for master, you probably won't need these.

@@ -24,8 +24,12 @@ if response.code == "200"
   versions = result["versions"]                                                                                                                                                                                              
   maxver = "0.0.0"                                                                                                                                                                                                           
   versions.each do |key, value|                                                                                                                                                                                              
-    maxver = versions[key]["version"] if Gem::Version.new(maxver) < Gem::Version.new(versions[key]["version"])                                                                                                               
-  end                                                                                                                                                                                                                        
+    if versions[key]["version"].include? "rc"                                                                                                                                                                                
+      maxver = maxver                                                                                                                                                                                                        
+    elsif Gem::Version.new(maxver) < Gem::Version.new(versions[key]["version"])                                                                                                                                              
+      maxver = versions[key]["version"]                                                                                                                                                                                      
+    end                                                                                                                                                                                                                      
+  end                                                                                                                                                                                                                       
   thisone = versions[maxver]["builds"].select { |builds| builds["os"] == os && builds["arch"] == arch}                                                                                                                       
   url = thisone[0]["url"]                                                                                                                                                                                                    
   filename = thisone[0]["filename"]

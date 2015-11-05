@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
-product="nomad"
-binaryfile="nomad"
+product="consul"
+binaryfile="consul"
 os="linux"                                                                                                                                                                                                                   
 arch="amd64"
 

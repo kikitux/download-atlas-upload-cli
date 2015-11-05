@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 product="atlas-upload-cli"
 binaryfile="atlas-upload"
 os="linux"                                                                                                                                                                                                                   

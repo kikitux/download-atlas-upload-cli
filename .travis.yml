@@ -11,6 +11,7 @@ sudo: false
 
 install:
   - gem update --system
+  - gem install rubyzip
   - gem --version
 
 script:

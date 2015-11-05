@@ -1,31 +1,44 @@
-require "rubygems/package"
-require "json"
-require "net/http"
-require 'open-uri'
-
-uri = URI.parse("https://api.github.com/repos/hashicorp/atlas-upload-cli/releases/latest")
-
-http = Net::HTTP.new(uri.host, uri.port)
-http.use_ssl = true
-
-request = Net::HTTP::Get.new(uri.request_uri)
-response = http.request(request)
-
-if response.code == "200"
-  result = JSON.parse(response.body)
-  tag_name = result["tag_name"].tr('a-zA-Z', '')
-  tarfile = "atlas-upload-cli_#{tag_name}_linux_amd64"
-  url = "https://github.com/hashicorp/atlas-upload-cli/releases/download/v#{tag_name}/#{tarfile}.tar.gz"
-
-  open("#{tarfile}.tar.gz", 'wb') do |file|
-    file << open(url).read
-  end
+product="atlas-upload-cli"                                                                                                                                                                                                   
+os="linux"                                                                                                                                                                                                                   
+arch="amd64"                                                                                                                                                                                                                 
+                                                                                                                                                                                                                             
+require "rubygems/package"                                                                                                                                                                                                   
+require "json"                                                                                                                                                                                                               
+require "net/http"                                                                                                                                                                                                           
+require 'open-uri'                                                                                                                                                                                                           
+                                                                                                                                                                                                                             
+uri = URI.parse("https://releases.hashicorp.com/#{product}/index.json")                                                                                                                                                      
+                                                                                                                                                                                                                             
+http = Net::HTTP.new(uri.host, uri.port)                                                                                                                                                                                     
+http.use_ssl = true                                                                                                                                                                                                          
+                                                                                                                                                                                                                             
+request = Net::HTTP::Get.new(uri.request_uri)                                                                                                                                                                                
+response = http.request(request)                                                                                                                                                                                             
+                                                                                                                                                                                                                             
+if response.code == "200"                                                                                                                                                                                                    
+  result = JSON.parse(response.body)                                                                                                                                                                                         
+  versions = result["versions"]                                                                                                                                                                                              
+  maxver = "0.0.0"                                                                                                                                                                                                           
+  versions.each do |key, value|                                                                                                                                                                                              
+    maxver = versions[key]["version"] if Gem::Version.new(maxver) < Gem::Version.new(versions[key]["version"])                                                                                                               
+  end                                                                                                                                                                                                                        
+  thisone = versions[maxver]["builds"].select { |builds| builds["os"] == os && builds["arch"] == arch}                                                                                                                       
+  url = thisone[0]["url"]                                                                                                                                                                                                    
+  filename = thisone[0]["filename"]                                                                                                                                                                                          
+                                                                                                                                                                                                                             
+  if File.file? filename                                                                                                                                                                                                     
+    puts "file #{filename} present"                                                                                                                                                                                          
+  else                                                                                                                                                                                                                       
+    open(filename, 'wb') do |file|                                                                                                                                                                                           
+      file << open(url).read                                                                                                                                                                                                 
+    end                                                                                                                                                                                                                      
+  end                                                                                                                                                                                                                        
 
   file = "atlas-upload"
 
-  Gem::Package::TarReader.new( Zlib::GzipReader.open "#{tarfile}.tar.gz") do |tar|
-    tar.each do |entry|
-      if entry.file? and entry.full_name == "#{tarfile}/#{file}"
+  Zlib::GzipReader.open filename do |zip|
+    zip.each do |entry|
+      if entry.file? and entry.full_name == "#{filename}/#{file}"
         File.open file, "wb" do |f|
           f.print entry.read
         end
@@ -34,5 +47,8 @@ if response.code == "200"
     end
   end
 
-  FileUtils.rm "#{tarfile}.tar.gz" if File.exists?("#{tarfile}.tar.gz")
+  FileUtils.rm filename if File.exists?(filename)
+  else                                                                                                                                                                                                                         
+  puts "check product #{product} is valid"                                                                                                                                                                                   
 end
+

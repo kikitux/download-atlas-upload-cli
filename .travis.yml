@@ -11,10 +11,12 @@ sudo: false
 
 install:
   - gem update --system
+  - gem install rubyzip
   - gem --version
 
 script:
   - ruby --verbose download-atlas-upload.rb
+  - [ -f atlas-upload ]
 
 after_script:
   - ls -al
